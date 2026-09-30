@@ -62,11 +62,11 @@ code: |
   AL_DEFAULT_STATE = 'ND'
 ---
 code: |
-  github_repo_name = 'docassemble-NdPowerOfAttorneyMinorShortFormV2'
+  github_repo_name = 'docassemble-NdPowerOfAttorneyForCareAndCustodyOfMinor'
 ---
 template: interview_short_title
 content: |
-  Grant authority for minor care decisions
+  Grant authority for care and custody of minor child(ren)
 ---
 code: |
   al_form_type = "other_form"
@@ -111,10 +111,10 @@ objects:
   - users: ALPeopleList.using(ask_number=True,target_number=1)
 ---
 sections:
-  - people: Begin Here
-  - about_you: Your Contact & Family
-  - case_details: Authority & Case Details
-  - sign_and_submit: Sign & Submit
+  - people: Begin here
+  - about_you: Your contact & family
+  - case_details: Power of attorney details
+  - sign_and_submit: Sign & submit
   - review_nd_power_of_attorney_minor_short_form_v2: Review your answers
 ---
 #################### Interview order #####################
@@ -125,6 +125,7 @@ mandatory: True
 code: |
   al_intro_screen
   nd_power_of_attorney_minor_short_form_v2_intro
+  attorney_in_fact_not_minor
   nav.set_section('about_you')
   users.gather()
   users[0].address.address
@@ -139,12 +140,11 @@ code: |
     children[2].birthdate
   set_parts(subtitle=str(users))
   set_progress(34)
-  nav.set_section('case_details')
   users1_is_parent
+  nav.set_section('case_details')
   delegate_all_powers_yes
   users1_end_date
   set_progress(51)
-  notary_date
   attorney_in_fact.gather()
   attorney_in_fact[0].address.address
   set_progress(68)
@@ -153,23 +153,38 @@ code: |
   signature_date
   store_variables_snapshot( persistent=True, data={ "zip": showifdef("users[0].address.zip"), "reached_interview_end": True, }, )
   nd_power_of_attorney_minor_short_form_v2_preview_question
+  notary_date
   basic_questions_signature_flow
   set_progress(100)
   nd_power_of_attorney_minor_short_form_v2_download
 ---
 id: ND Power of Attorney Minor Short Form v2 intro
 continue button field: nd_power_of_attorney_minor_short_form_v2_intro
-question: North Dakota Power of Attorney for Care and Custody of Minor Child(ren)
-subquestion: |
+question: "North Dakota power of attorney for care and custody of minor child(ren)"
+subquestion: |2
   ### Before you get started
-  - Gather information about your child(ren) and the person you wish to appoint as attorney-in-fact.
+  - Gather your child(ren)'s names and birthdates.
+  - Gather the name and address of the person you wish to appoint as attorney-in-fact.
   - Ensure you understand the powers you are delegating.
-
+  
   ### When you are finished
   - Sign the form in front of a notary public or clerk of court to make it official.
   - Provide copies to the appointed attorney-in-fact and keep one for your records.
-
-  You can use this form if you are a parent or guardian looking to delegate authority for your minor child. It's important to understand the powers you are granting and the duration of this authority.
+  
+  You can use this form if you are a parent or guardian looking to delegate authority for your minor child(ren). It is important to understand the powers you are granting and the duration of this authority. Use this form if you are delegating authority for six months or less.
+---
+id: prelim questions
+question: |
+  Before you start:
+subquestion: |
+  Let's make sure this is the right form for you.
+fields:
+  - Is the attorney in fact 18 or older?: attorney_in_fact_not_minor
+    datatype: yesnoradio
+  - label: Do you want to delegate your powers for six months or less?
+    field: delegate_less_than_six_months
+    datatype: yesnoradio
+    show if: attorney_in_fact_not_minor
 ---
 id: User s Name
 question: |
@@ -188,8 +203,12 @@ subquestion: |
 fields:
   - "I am a parent": users1_is_parent
     datatype: yesno
+    uncheck others:
+      - users1_is_legal_guardian
   - "I am a legal guardian": users1_is_legal_guardian
     datatype: yesno
+    uncheck others:
+      - users1_is_parent
 ---
 id: User s Address
 question: |
@@ -199,20 +218,35 @@ subquestion: |
 fields:
   - "User's residential address": users1_address
 ---
-id: Attorney-in-Fact Details
-question: |
-  Attorney-in-Fact Details
-subquestion: |
-  Would you like to delegate all powers or specific authority?
+id: Powers To Delegate
+question: |2
+  Choose which powers to delegate.
+subquestion: |2
+  Would you like to delegate all the power and authority that you have as a parent or guardian?
 fields:
-  - "Delegates all powers to attorney": delegate_all_powers_yes
+  - "Yes, delegate all powers.": delegate_all_powers_yes
     datatype: yesno
-  - "Delegates specific authority to attorney": delegate_specific_authority_yes
+    uncheck others:
+      - delegate_specific_authority_yes
+  - "No, I need to choose specific powers.": delegate_specific_authority_yes
     datatype: yesno
-  - label: Details of specific authority
+    uncheck others:
+      - delegate_all_powers_yes
+  - label: "Select the powers you want to delegate:"
     field: specific_authority
-    required: False
+    datatype: checkboxes
+    choices:
+      - "Decisions about education, including permission slips and school documents."
+      - Consent to participation in activities.
+      - "Health care decisions, including access to medical records and consent to disclosure of medical records."
+      - "Authority to execute documents aside from school, activities, or health care."
+      - "Other (fill in the box below):"
+    none of the above: false
+    show if: delegate_specific_authority_yes
     input type: area
+  - label: "Describe the authority you want to delegate:"
+    field: specific_authority_other
+    show if: "specific_authority['Other (fill in the box below):']"
 ---
 id: Authority Duration
 question: |
@@ -220,8 +254,12 @@ question: |
 subquestion: |
   Specify the end date for the power of attorney.
 fields:
-  - "End date of authority": users1_end_date
+  - label: End date of authority
+    field: users1_end_date
     datatype: date
+    help: Must be within 6 months.
+    min: "${ today().year }"
+    max: "${ today().plus(months=6) }"
 ---
 id: Contact Information
 question: |
@@ -621,8 +659,12 @@ attachment:
       - "signature_date": ${ signature_date.format() }
       - "users1_signature": ${ users[0].signature_if_final(i) }
       - "users1_address_on_one_line": ${ users[0].address.on_one_line() }
-      - "users1_phone_number": "${ users[0].phone_numbers() }"
+      - "users1_phone_number": ${ users[0].phone_number }
       - "users1_email_address": ${ users1_email_address }
       - "notary_date": ${ notary_date.format() }
       - "notary_signature": ${ notary[0].signature_if_final(i) }
       - "notary_commission_expiration_date": ${ notary_commission_expiration_date.format() }
+---
+template: nd_power_of_attorney_minor_short_form_v2_attachment_title
+content: |
+  Nd power of attorney minor short form v2

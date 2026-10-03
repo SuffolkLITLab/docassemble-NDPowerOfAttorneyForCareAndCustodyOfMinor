@@ -125,7 +125,7 @@ mandatory: True
 code: |
   al_intro_screen
   nd_power_of_attorney_minor_short_form_v2_intro
-  attorney_in_fact_not_minor
+  delegate_length
   nav.set_section('about_you')
   users.gather()
   users[0].address.address
@@ -162,16 +162,20 @@ id: ND Power of Attorney Minor Short Form v2 intro
 continue button field: nd_power_of_attorney_minor_short_form_v2_intro
 question: "North Dakota power of attorney for care and custody of minor child(ren)"
 subquestion: |2
+  A power of attorney appoints another person, called the attorney-in-fact, to step into a parent or legal guardian's shoes and make decisions for a child under age 18.
+  
+  You can use this form if you are a parent or legal guardian. You may delegate any or all of your powers regarding care, custody, or property of your minor child, except for the power to consent to marriage or adoption.
+  
+  A power of attorney lasts for six months or less. If you need to delegate your power for longer than six months, you might need to set up a [guardianship](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
+  
   ### Before you get started
-  - Gather your child(ren)'s names and birthdates.
+  - Gather your child(ren)'s names and birth dates.
   - Gather the name and address of the person you wish to appoint as attorney-in-fact.
   - Ensure you understand the powers you are delegating.
   
   ### When you are finished
   - Sign the form in front of a notary public or clerk of court to make it official.
   - Provide copies to the appointed attorney-in-fact and keep one for your records.
-  
-  You can use this form if you are a parent or guardian looking to delegate authority for your minor child(ren). It is important to understand the powers you are granting and the duration of this authority. Use this form if you are delegating authority for six months or less.
 ---
 id: prelim questions
 question: |
@@ -179,12 +183,22 @@ question: |
 subquestion: |
   Let's make sure this is the right form for you.
 fields:
-  - Is the attorney in fact 18 or older?: attorney_in_fact_not_minor
-    datatype: yesnoradio
-  - label: Do you want to delegate your powers for six months or less?
-    field: delegate_less_than_six_months
-    datatype: yesnoradio
-    show if: attorney_in_fact_not_minor
+  - For how long do you want to delegate your power?: delegate_length
+    datatype: radio
+    choices:
+      - Six months or less
+      - Longer than six months
+---
+id: exit guardianship
+question: "This is not the right form for you."
+buttons:
+  [{"Exit":"first"}]
+subquestion: "If you want to delegate your powers for more than six months, you might need a guardianship. To learn more, visit the North Dakota courts web page on [minor guardianships](https://https://www.ndcourts.gov/legal-self-help/minor-guardianship)."
+event: exit_guardianship
+---
+id: exit attorney in fact under 18
+question: "You will need to select someone else"
+subquestion: "The attorney-in-fact must be age 18 or older. If you can choose another person who is age 18 or older, you can continue with this form."
 ---
 id: User s Name
 question: |
@@ -236,17 +250,17 @@ fields:
     field: specific_authority
     datatype: checkboxes
     choices:
-      - "Decisions about education, including permission slips and school documents."
-      - Consent to participation in activities.
-      - "Health care decisions, including access to medical records and consent to disclosure of medical records."
-      - "Authority to execute documents aside from school, activities, or health care."
-      - "Other (fill in the box below):"
+      - "Education decisions, including permission slips and school documents"
+      - Consent to participate in activities
+      - "Health care decisions, including access to and disclosure of medical records"
+      - Authority to execute other documents
+      - "Other (fill in below):"
     none of the above: false
     show if: delegate_specific_authority_yes
     input type: area
   - label: "Describe the authority you want to delegate:"
     field: specific_authority_other
-    show if: "specific_authority['Other (fill in the box below):']"
+    show if: "specific_authority['Other (fill in below):']"
 ---
 id: Authority Duration
 question: |

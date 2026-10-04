@@ -126,6 +126,11 @@ code: |
   al_intro_screen
   nd_power_of_attorney_minor_short_form_v2_intro
   delegate_length
+  if delegate_length == "Longer than six months":
+    exit_guardianship
+  attorney_in_fact_age
+  if attorney_in_fact_age == "Under 18":
+    attorney_in_fact_age_warning
   nav.set_section('about_you')
   users.gather()
   users[0].address.address
@@ -171,7 +176,8 @@ subquestion: |2
   ### Before you get started
   - Gather your child(ren)'s names and birth dates.
   - Gather the name and address of the person you wish to appoint as attorney-in-fact.
-  - Ensure you understand the powers you are delegating.
+  - Make sure your attorney-in-fact is age 18 or older.
+  - Make sure you understand the powers you are delegating.
   
   ### When you are finished
   - Sign the form in front of a notary public or clerk of court to make it official.
@@ -190,15 +196,33 @@ fields:
       - Longer than six months
 ---
 id: exit guardianship
-question: "This is not the right form for you."
-buttons:
-  [{"Exit":"first"}]
-subquestion: "If you want to delegate your powers for more than six months, you might need a guardianship. To learn more, visit the North Dakota courts web page on [minor guardianships](https://https://www.ndcourts.gov/legal-self-help/minor-guardianship)."
 event: exit_guardianship
+question: This is not the right form for you.
+subquestion: |
+  If you want to delegate your powers for more than six months, you might need a guardianship. To learn more, visit the North Dakota courts web page on [minor guardianships](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
+buttons:
+  - Exit: exit
+---
+id: attorney_in_fact_age_check
+question: "Attorney-in-fact age"
+fields:
+  - How old is the person you will appoint as your attorney-in-fact?: attorney_in_fact_age
+    datatype: radio
+    choices:
+      - "18 or older"
+      - Under 18
+---
+code: |
+  delegate_length
+  if delegate_length == "Longer than six months":
+    exit_guardianship
 ---
 id: exit attorney in fact under 18
 question: "You will need to select someone else"
-subquestion: "The attorney-in-fact must be age 18 or older. If you can choose another person who is age 18 or older, you can continue with this form."
+subquestion: "The attorney-in-fact must be age 18 or older. If you want to choose someone else who is 18 or older, click undo. Otherwise, click exit."
+buttons:
+  - Exit: exit
+event: attorney_in_fact_age_warning
 ---
 id: User s Name
 question: |

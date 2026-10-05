@@ -125,8 +125,8 @@ mandatory: True
 code: |
   al_intro_screen
   nd_power_of_attorney_minor_short_form_v2_intro
-  delegate_length
-  if delegate_length == "Longer than six months":
+  power_of_attorney_accepted
+  if (not power_of_attorney_accepted) or delegate_length == "Longer than six months":
     exit_guardianship
   attorney_in_fact_age
   if attorney_in_fact_age == "Under 18":
@@ -177,7 +177,7 @@ subquestion: |2
   - Gather your child(ren)'s names and birth dates.
   - Gather the name and address of the person you wish to appoint as attorney-in-fact.
   - Make sure your attorney-in-fact is age 18 or older.
-  - Make sure you understand the powers you are delegating.
+  - Make sure you understand the powers you are delegating. [Click here](https://ndlegis.gov/cencode/t14c09.pdf#nameddest=14-09-32) to see examples of some rights and responsibilities that you could delegate.
   
   ### When you are finished
   - Sign the form in front of a notary public or clerk of court to make it official.
@@ -189,17 +189,23 @@ question: |
 subquestion: |
   Let's make sure this is the right form for you.
 fields:
-  - For how long do you want to delegate your power?: delegate_length
+  - note: |
+      Contact your child's school, medical provider, day care, etc to see if they will accept a power of attorney. Some places will only accept a court order.
+  - Will a power of attorney be accepted where you need it?: power_of_attorney_accepted
+    datatype: yesnoradio
+  - label: For how long do you want to delegate your power?
+    field: delegate_length
     datatype: radio
     choices:
       - Six months or less
       - Longer than six months
+    show if: power_of_attorney_accepted
 ---
 id: exit guardianship
 event: exit_guardianship
 question: This is not the right form for you.
-subquestion: |
-  If you want to delegate your powers for more than six months, you might need a guardianship. To learn more, visit the North Dakota courts web page on [minor guardianships](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
+subquestion: |2
+  If you want to delegate your powers for more than six months, or your child's school or provider does not accept a power of attorney, you might need a guardianship. To learn more, visit the North Dakota courts web page on [minor guardianships](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
 buttons:
   - Exit: exit
 ---

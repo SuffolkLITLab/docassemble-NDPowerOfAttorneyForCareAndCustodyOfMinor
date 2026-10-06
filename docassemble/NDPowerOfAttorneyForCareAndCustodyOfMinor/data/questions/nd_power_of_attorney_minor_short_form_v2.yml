@@ -435,100 +435,91 @@ event: review_nd_power_of_attorney_minor_short_form_v2
 question: |
   Review your answers
 review:
-  - Edit: users.revisit
+  - Edit: users
+    action: users.revisit
     button: |
-      **Users**
+      **Your name**
       % for item in users:
-        * ${ item }
+      - ${ item }
       % endfor
+  - Edit: children
+    action: children.revisit
+    button: |
+      **Your children**
+      % for item in children:
+      - ${ item }
+      % endfor
+  - Edit: "children[0].birthdate"
+    button: |
+      **Child's birthdate**
+      - ${ showifdef('children[0].birthdate') }
+  - Edit: attorney_in_fact
+    action: attorney_in_fact.revisit
+    button: |
+      **Attorney-in-fact**
+      % for item in attorney_in_fact:
+      - ${ item }
+      % endfor
+  - Edit: notary
+    action: notary.revisit
+    button: |
+      **Notary**
+      % for item in notary:
+      - ${ item }
+      % endfor
+  - Edit: "users[0].address"
+    button: |
+      **Your Address**
+      - ${ showifdef('users[0].address') }
   - Edit: users1_is_parent
     button: |
-      **Guardian Information**
-      Is user a parent: ${ word(yesno(users1_is_parent)) if defined('users1_is_parent') else '' }
-      Is user a legal guardian: ${ word(yesno(users1_is_legal_guardian)) if defined('users1_is_legal_guardian') else '' }
-  - Edit: users1_address
-    button: |
-      **User's Address**
-      User's residential address: ${ showifdef('users1_address') }
+      **Parent or legal guardian**
+      I am a parent: ${ word(yesno(users1_is_parent)) if defined('users1_is_parent') else '' }
+      I am a legal guardian: ${ word(yesno(users1_is_legal_guardian)) if defined('users1_is_legal_guardian') else '' }
   - Edit: delegate_all_powers_yes
     button: |
-      **Attorney-in-Fact Details**
-      Delegates all powers to attorney: ${ word(yesno(delegate_all_powers_yes)) if defined('delegate_all_powers_yes') else '' }
-      Delegates specific authority to attorney: ${ word(yesno(delegate_specific_authority_yes)) if defined('delegate_specific_authority_yes') else '' }
-      Details of specific authority: ${ single_paragraph(specific_authority) if defined('specific_authority') else '' }
+      **Choice of powers to delegate.**
+      Yes, delegate all powers.: ${ word(yesno(delegate_all_powers_yes)) if defined('delegate_all_powers_yes') else '' }
+      No, I need to choose specific powers.: ${ word(yesno(delegate_specific_authority_yes)) if defined('delegate_specific_authority_yes') else '' }
+      % if showifdef('delegate_specific_authority_yes'):
+      Select the powers you want to delegate:: ${ showifdef('specific_authority') }
+      % endif
+      % if showifdef("specific_authority['Other (fill in below):']"):
+      Describe the authority you want to delegate:: ${ showifdef('specific_authority_other') }
+      % endif
   - Edit: users1_end_date
     button: |
-      **Authority Duration**
-      End date of authority: ${ showifdef('users1_end_date') }
+      **End date of authority**
+      - ${ showifdef('users1_end_date') }
   - Edit: users1_email_address
     button: |
-      **Contact Information**
-      User's email contact: ${ showifdef('users1_email_address') }
+      **Your email**
+      - ${ showifdef('users1_email_address') }
   - Edit: notary_date
     button: |
       **Notary Information**
       Date of notary signing: ${ showifdef('notary_date') }
       Notary commission expiration date: ${ showifdef('notary_commission_expiration_date') }
-  - Edit: children.revisit
+  - Edit: "users[0].phone_number"
     button: |
-      **Children**
-      % for item in children:
-        * ${ item }
-      % endfor
-  - Edit: attorney_in_fact.revisit
-    button: |
-      **Attorney in fact**
-      % for item in attorney_in_fact:
-        * ${ item }
-      % endfor
-  - Edit: notary.revisit
-    button: |
-      **Notary**
-      % for item in notary:
-        * ${ item }
-      % endfor
-  - Edit: users1_is_parent
-    button: |
-      **Is user a parent**
-      Is user a parent: ${ word(yesno(users1_is_parent)) if defined('users1_is_parent') else '' }
-  - Edit: users1_is_legal_guardian
-    button: |
-      **Is user a legal guardian**
-      Is user a legal guardian: ${ word(yesno(users1_is_legal_guardian)) if defined('users1_is_legal_guardian') else '' }
-  - Edit: users1_address
-    button: |
-      **User's residential address**
-      User's residential address: ${ showifdef('users1_address') }
+      **Your phone number**
+      - ${ showifdef('users[0].phone_number') }
   - Edit: delegate_all_powers_yes
     button: |
-      **Delegates all powers to attorney**
-      Delegates all powers to attorney: ${ word(yesno(delegate_all_powers_yes)) if defined('delegate_all_powers_yes') else '' }
+      **Are you delegating all powers?**
+      - ${ word(yesno(delegate_all_powers_yes)) if defined('delegate_all_powers_yes') else '' }
   - Edit: delegate_specific_authority_yes
     button: |
-      **Delegates specific authority to attorney**
-      Delegates specific authority to attorney: ${ word(yesno(delegate_specific_authority_yes)) if defined('delegate_specific_authority_yes') else '' }
+      **Are you delegating specific powers?**
+      - ${ word(yesno(delegate_specific_authority_yes)) if defined('delegate_specific_authority_yes') else '' }
   - Edit: specific_authority
     button: |
-      **Details of specific authority**
+      **Specific powers you are delegating**
       Details of specific authority: ${ single_paragraph(specific_authority) if defined('specific_authority') else '' }
-  - Edit: users1_end_date
-    button: |
-      **End date of authority**
-      End date of authority: ${ showifdef('users1_end_date') }
-  - Edit: users1_email_address
-    button: |
-      **User's email contact**
-      User's email contact: ${ showifdef('users1_email_address') }
-  - Edit: notary_date
-    button: |
-      **Date of notary signing**
-      Date of notary signing: ${ showifdef('notary_date') }
   - Edit: notary_commission_expiration_date
     button: |
       **Notary commission expiration date**
       Notary commission expiration date: ${ showifdef('notary_commission_expiration_date') }
-  - Edit:: users1.phone_number
-    button: "${ showifdef(\"users1.phone_number\") }"
 ---
 id: edit users
 continue button field: users.revisit

@@ -174,8 +174,8 @@ subquestion: |2
   A power of attorney lasts for six months or less. If you need to delegate your power for longer than six months, you might need to set up a [guardianship](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
   
   ### Before you get started
-  - Gather your child(ren)'s names and birth dates.
-  - Gather the name and address of the person you wish to appoint as attorney-in-fact.
+  - You will need your child(ren)'s names and birth dates.
+  - You will need the name and address of the person you wish to appoint as attorney-in-fact.
   - Make sure your attorney-in-fact is age 18 or older.
   - Make sure you understand the powers you are delegating. [Click here](https://ndlegis.gov/cencode/t14c09.pdf#nameddest=14-09-32) to see examples of some rights and responsibilities that you could delegate.
   
@@ -184,13 +184,14 @@ subquestion: |2
   - Provide copies to the appointed attorney-in-fact and keep one for your records.
 ---
 id: prelim questions
-question: |
-  Before you start:
+question: |2
+  Before you start
 subquestion: |
   Let's make sure this is the right form for you.
 fields:
   - note: |
-      Contact your child's school, medical provider, day care, etc to see if they will accept a power of attorney. Some places will only accept a court order.
+      Contact your child's school, medical provider, or day care to see if they will accept a power of attorney. Some places will only accept a court order.
+      
   - Will a power of attorney be accepted where you need it?: power_of_attorney_accepted
     datatype: yesnoradio
   - label: For how long do you want to delegate your power?
@@ -280,10 +281,10 @@ fields:
     field: specific_authority
     datatype: checkboxes
     choices:
-      - "Education decisions, including permission slips and school documents"
-      - Consent to participate in activities
-      - "Health care decisions, including access to and disclosure of medical records"
-      - Authority to execute other documents
+      - Education decisions
+      - Consent for activities
+      - Health care decisions
+      - Authority to sign other documents
       - "Other (fill in below):"
     none of the above: false
     show if: delegate_specific_authority_yes
@@ -442,6 +443,11 @@ review:
       % for item in users:
       - ${ item }
       % endfor
+  - Edit: users1_is_parent
+    button: |
+      **Parent or legal guardian**
+      I am a parent: ${ word(yesno(users1_is_parent)) if defined('users1_is_parent') else '' }
+      I am a legal guardian: ${ word(yesno(users1_is_legal_guardian)) if defined('users1_is_legal_guardian') else '' }
   - Edit: children
     action: children.revisit
     button: |
@@ -453,6 +459,10 @@ review:
     button: |
       **Child's birthdate**
       - ${ showifdef('children[0].birthdate') }
+  - Edit: "users[0].address"
+    button: |
+      **Your Address**
+      - ${ showifdef('users[0].address') }
   - Edit: attorney_in_fact
     action: attorney_in_fact.revisit
     button: |
@@ -460,6 +470,10 @@ review:
       % for item in attorney_in_fact:
       - ${ item }
       % endfor
+  - Edit: "attorney_in_fact[0].address"
+    button: |
+      **Attorney-in-fact's address**
+      - ${ showifdef('attorney_in_fact[0].address') }
   - Edit: notary
     action: notary.revisit
     button: |
@@ -467,15 +481,6 @@ review:
       % for item in notary:
       - ${ item }
       % endfor
-  - Edit: "users[0].address"
-    button: |
-      **Your Address**
-      - ${ showifdef('users[0].address') }
-  - Edit: users1_is_parent
-    button: |
-      **Parent or legal guardian**
-      I am a parent: ${ word(yesno(users1_is_parent)) if defined('users1_is_parent') else '' }
-      I am a legal guardian: ${ word(yesno(users1_is_legal_guardian)) if defined('users1_is_legal_guardian') else '' }
   - Edit: delegate_all_powers_yes
     button: |
       **Choice of powers to delegate.**
@@ -487,23 +492,6 @@ review:
       % if showifdef("specific_authority['Other (fill in below):']"):
       Describe the authority you want to delegate:: ${ showifdef('specific_authority_other') }
       % endif
-  - Edit: users1_end_date
-    button: |
-      **End date of authority**
-      - ${ showifdef('users1_end_date') }
-  - Edit: users1_email_address
-    button: |
-      **Your email**
-      - ${ showifdef('users1_email_address') }
-  - Edit: notary_date
-    button: |
-      **Notary Information**
-      Date of notary signing: ${ showifdef('notary_date') }
-      Notary commission expiration date: ${ showifdef('notary_commission_expiration_date') }
-  - Edit: "users[0].phone_number"
-    button: |
-      **Your phone number**
-      - ${ showifdef('users[0].phone_number') }
   - Edit: delegate_all_powers_yes
     button: |
       **Are you delegating all powers?**
@@ -516,6 +504,23 @@ review:
     button: |
       **Specific powers you are delegating**
       Details of specific authority: ${ single_paragraph(specific_authority) if defined('specific_authority') else '' }
+  - Edit: users1_end_date
+    button: |
+      **End date of authority**
+      - ${ showifdef('users1_end_date') }
+  - Edit: notary_date
+    button: |
+      **Notary Information**
+      Date of notary signing: ${ showifdef('notary_date') }
+      Notary commission expiration date: ${ showifdef('notary_commission_expiration_date') }
+  - Edit: "users[0].phone_number"
+    button: |
+      **Your phone number**
+      - ${ showifdef('users[0].phone_number') }
+  - Edit: users1_email_address
+    button: |
+      **Your email**
+      - ${ showifdef('users1_email_address') }
   - Edit: notary_commission_expiration_date
     button: |
       **Notary commission expiration date**

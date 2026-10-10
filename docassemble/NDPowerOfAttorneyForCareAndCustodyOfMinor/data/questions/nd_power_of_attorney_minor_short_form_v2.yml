@@ -106,7 +106,7 @@ code: |
 ---
 objects:
   - attorney_in_fact: ALPeopleList.using(ask_number=True,target_number=1)
-  - children: ALPeopleList.using(there_are_any=True,complete_attribute=["name.first","birthdate"])
+  - children: ALPeopleList.using(there_are_any=True,complete_attribute=["name.first", "birthdate"])
   - notary: ALPeopleList.using(ask_number=True,target_number=1)
   - users: ALPeopleList.using(ask_number=True,target_number=1)
 ---
@@ -153,8 +153,8 @@ code: |
   signature_date
   store_variables_snapshot( persistent=True, data={ "zip": showifdef("users[0].address.zip"), "reached_interview_end": True, }, )
   nd_power_of_attorney_minor_short_form_v2_preview_question
-  notary_date
   basic_questions_signature_flow
+  notary_date
   set_progress(100)
   nd_power_of_attorney_minor_short_form_v2_download
 ---
@@ -162,21 +162,21 @@ id: ND Power of Attorney Minor Short Form v2 intro
 continue button field: nd_power_of_attorney_minor_short_form_v2_intro
 question: "North Dakota power of attorney for care and custody of minor child(ren)"
 subquestion: |2
-  A power of attorney appoints another person, called the attorney-in-fact, to step into a parent or legal guardian's shoes and make decisions for a child under age 18.
+  A power of attorney names another person, called the attorney-in-fact, to step into your shoes and make decisions for a child under age 18.
   
-  You can use this form if you are a parent or legal guardian. You may delegate any or all of your powers regarding care, custody, or property of your minor child, except for the power to consent to marriage or adoption.
+  You can use this form if you are a parent or legal guardian. You may delegate any or all of your powers for care, custody, or property of your minor child, except the power to consent to marriage or adoption.
   
-  A power of attorney lasts for six months or less. If you need to delegate your power for longer than six months, you might need to set up a [guardianship](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
+  A power of attorney lasts for six months or less. If you need to delegate your power for longer than six months, you might need a [guardianship](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
   
   ### Before you get started
   - You will need your child(ren)'s names and birth dates.
-  - You will need the name and address of the person you wish to appoint as attorney-in-fact.
+  - You will need the name and address of the person you wish to name as attorney-in-fact.
   - Make sure your attorney-in-fact is age 18 or older.
   - Make sure you understand the powers you are delegating. [Click here](https://ndlegis.gov/cencode/t14c09.pdf#nameddest=14-09-32) to see examples of some rights and responsibilities that you could delegate.
   
   ### When you are finished
   - Sign the form in front of a notary public or clerk of court to make it official.
-  - Provide copies to the appointed attorney-in-fact and keep one for your records.
+  - Give copies to your attorney-in-fact and keep one for your records.
 ---
 id: prelim questions
 question: |2
@@ -201,14 +201,17 @@ id: exit guardianship
 event: exit_guardianship
 question: This is not the right form for you.
 subquestion: |2
-  If you want to delegate your powers for more than six months, or your child's school or provider does not accept a power of attorney, you might need a guardianship. To learn more, visit the North Dakota courts web page on [minor guardianships](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
+  You might need a guardianship if:
+  * You want to delegate your powers for more than six months
+  * Your child's school or provider does not accept a power of attorney
+  * To learn more, visit the North Dakota courts web page on [minor guardianships](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
 buttons:
   - Exit: exit
 ---
 id: attorney_in_fact_age_check
 question: "Attorney-in-fact age"
 fields:
-  - How old is the person you will appoint as your attorney-in-fact?: attorney_in_fact_age
+  - How old is the person you will choose for your attorney-in-fact?: attorney_in_fact_age
     datatype: radio
     choices:
       - "18 or older"
@@ -220,26 +223,25 @@ code: |
     exit_guardianship
 ---
 id: exit attorney in fact under 18
-question: "You will need to select someone else"
-subquestion: "The attorney-in-fact must be age 18 or older. If you want to choose someone else who is 18 or older, click undo. Otherwise, click exit."
+question: "You will need to choose someone else"
+subquestion: "The attorney-in-fact must be age 18 or older. If you want to choose someone else who is 18 or older, click undo. If you cannot choose someone over 18, click exit."
 buttons:
   - Exit: exit
 event: attorney_in_fact_age_warning
 ---
 id: User s Name
-question: |
-  User's Full Name
-subquestion: |
-  Provide your full name
+question: |2
+  Your name
+subquestion: |2+
+  
 fields:
-  - "User's full name": users1_name_full
-    datatype: text
+  - What is your name?: users1_name_full
 ---
 id: Guardian Information
 question: |
   Guardian Information
-subquestion: |
-  Please specify your relationship to the minor child(ren).
+subquestion: |2
+  What is your relationship to the children?
 fields:
   - "I am a parent": users1_is_parent
     datatype: yesno
@@ -251,18 +253,18 @@ fields:
       - users1_is_parent
 ---
 id: User s Address
-question: |
-  User's Address
-subquestion: |
-  Provide your residential address.
+question: |2
+  Your Address
+subquestion: |2+
+  
 fields:
-  - "User's residential address": users1_address
+  - What is your address?: users1_address
 ---
 id: Powers To Delegate
 question: |2
   Choose which powers to delegate.
 subquestion: |2
-  Would you like to delegate all the power and authority that you have as a parent or guardian?
+  Would you like to delegate all the powers that you have as a parent or guardian?
 fields:
   - "Yes, delegate all powers.": delegate_all_powers_yes
     datatype: yesno
@@ -272,29 +274,29 @@ fields:
     datatype: yesno
     uncheck others:
       - delegate_all_powers_yes
-  - label: "Select the powers you want to delegate:"
+  - label: "Choose the powers you want to delegate:"
     field: specific_authority
     datatype: checkboxes
     choices:
       - Education decisions
       - Consent for activities
       - Health care decisions
-      - Authority to sign other documents
+      - Power to sign other documents
       - "Other (fill in below):"
     none of the above: false
     show if: delegate_specific_authority_yes
     input type: area
-  - label: "Describe the authority you want to delegate:"
+  - label: "Describe the power you want to delegate:"
     field: specific_authority_other
     show if: "specific_authority['Other (fill in below):']"
 ---
 id: Authority Duration
-question: |
-  Authority Duration
-subquestion: |
-  Specify the end date for the power of attorney.
+question: |2
+  Length of time to delegate
+subquestion: |2+
+  
 fields:
-  - label: End date of authority
+  - label: "Choose the end date for your delegation of power:"
     field: users1_end_date
     datatype: date
     help: Must be within 6 months.
@@ -302,13 +304,12 @@ fields:
     max: "${ today().plus(months=6) }"
 ---
 id: Contact Information
-question: |
-  Contact Information
-subquestion: |
-  Please provide your email contact.
+question: |2
+  Email contact
+subquestion: |2+
+  
 fields:
-  - "User's email contact": users1_email_address
-    datatype: text
+  - What is your email address?: users1_email_address
 ---
 id: Notary Information
 question: |
@@ -686,6 +687,7 @@ attachment:
   fields:
       - "users1_name_full": ${ users[0] }
       - "users1_name_full__1": ${ users[0] }
+      - "users1_name_full__2": ${ users[0] }
       - "users1_name__1": ${ users[0] }
       - "users1_is_parent": ${ users1_is_parent }
       - "users1_is_legal_guardian": ${ users1_is_legal_guardian }

@@ -114,8 +114,8 @@ sections:
   - people: Begin here
   - about_you: Your contact & family
   - case_details: Power of attorney details
-  - sign_and_submit: Sign & submit
   - review_nd_power_of_attorney_minor_short_form_v2: Review your answers
+  - sign_and_submit: Sign & submit
 ---
 #################### Interview order #####################
 comment: |
@@ -148,13 +148,16 @@ code: |
   attorney_in_fact.gather()
   attorney_in_fact[0].address.address
   set_progress(68)
-  nav.set_section('sign_and_submit')
+  nav.set_section('review_nd_power_of_attorney_minor_short_form_v2')
   signature_date
   signature_date
   store_variables_snapshot( persistent=True, data={ "zip": showifdef("users[0].address.zip"), "reached_interview_end": True, }, )
   nd_power_of_attorney_minor_short_form_v2_preview_question
-  basic_questions_signature_flow
-  notary_date
+  with_notary_now
+  nav.set_section('sign_and_submit')
+  if with_notary_now:
+    basic_questions_signature_flow
+    notary_date
   set_progress(100)
   nd_power_of_attorney_minor_short_form_v2_download
 ---
@@ -312,15 +315,20 @@ fields:
   - What is your email address?: users1_email_address
 ---
 id: Notary Information
-question: |
-  Notary Information
-subquestion: |
-  Fill in the details for the notary signing.
+question: |2
+  Notary Information (optional)
+subquestion: |2
+  If you are with a notary, fill in the information below. If not, click Next.
 fields:
-  - "Date of notary signing": notary_date
+  - label: Date of notary signing
+    field: notary_date
     datatype: date
-  - "Notary commission expiration date": notary_commission_expiration_date
+    required: False
+    default: "${ today() }"
+  - label: Notary commission expiration date
+    field: notary_commission_expiration_date
     datatype: date
+    required: False
 ---
 comment: |
   The questions below are copies of the questions in AssemblyLine's
@@ -375,9 +383,9 @@ sets:
   - notary[i].name.last
   - notary[i].name.middle
   - notary[i].name.suffix
-question: |
+question: |2
   % if hasattr(notary, 'ask_number') and notary.ask_number and notary.target_number == 1:
-  Name of notary
+  Name of notary or court clerk
   % else:
   Name of the ${ ordinal(i) } notary
   % endif
@@ -601,6 +609,13 @@ subquestion: |
 
   ${ notary.add_action() }
 ---
+id: with notary
+question: "Are you ready to sign now?"
+subquestion: "You need to sign this form in front of a notary or a court clerk. If you are not ready, you can print a copy of the form and sign it later."
+fields:
+  - Are you with a notary or court clerk now?: with_notary_now
+    datatype: yesnoradio
+---
 table: notary.table
 rows: notary
 columns:
@@ -613,18 +628,17 @@ id: download nd_power_of_attorney_minor_short_form_v2
 event: nd_power_of_attorney_minor_short_form_v2_download
 question: |
   All done
-subquestion: |
-  Thank you ${users}. Your form is ready to download and deliver.
-
+subquestion: |2
+  Thank you ${users}. Your form is ready to download.
+  
   Use the options on this page to view, download and send your form. Use the
   "Edit answers" button to fix any mistakes.
-
+  
   ${ action_button_html(url_action('review_nd_power_of_attorney_minor_short_form_v2'), label=word('Edit answers'), color='info') }
-
+  
   ${ al_user_bundle.download_list_html() }
-
+  
   ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
-
 progress: 100
 ---
 # ALDocument objects specify the metadata for each template

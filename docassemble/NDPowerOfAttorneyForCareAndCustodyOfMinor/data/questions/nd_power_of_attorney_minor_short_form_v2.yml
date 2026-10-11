@@ -106,7 +106,7 @@ code: |
 ---
 objects:
   - attorney_in_fact: ALPeopleList.using(ask_number=True,target_number=1)
-  - children: ALPeopleList.using(there_are_any=True,complete_attribute=["name.first", "birthdate"])
+  - children: ALPeopleList.using(ask_number=True,there_are_any=True,complete_attribute=["name.first", "birthdate"])
   - notary: ALPeopleList.using(ask_number=True,target_number=1)
   - users: ALPeopleList.using(ask_number=True,target_number=1)
 ---
@@ -265,7 +265,7 @@ fields:
 ---
 id: Powers To Delegate
 question: |2
-  Choose which powers to delegate.
+  Choose which powers to delegate
 subquestion: |2
   Would you like to delegate all the powers that you have as a parent or guardian?
 fields:
@@ -342,15 +342,21 @@ sets:
   - attorney_in_fact[i].name.last
   - attorney_in_fact[i].name.middle
   - attorney_in_fact[i].name.suffix
-question: |
+question: |2
   % if hasattr(attorney_in_fact, 'ask_number') and attorney_in_fact.ask_number and attorney_in_fact.target_number == 1:
-  Name of attorney in fact
-  % else:
-  Name of the ${ ordinal(i) } attorney in fact
+  Who are you delegating your power to?
   % endif
 fields:
   - code: |
       attorney_in_fact[i].name_fields()
+---
+id: how many children
+question: |
+  How many children do you have?
+fields:
+  - Number of children: children.target_number
+    datatype: integer
+    min: 1
 ---
 id: children names
 sets:
@@ -358,11 +364,11 @@ sets:
   - children[i].name.last
   - children[i].name.middle
   - children[i].name.suffix
-question: |
+question: |2
   % if hasattr(children, 'ask_number') and children.ask_number and children.target_number == 1:
-  Name of child
+  Your child's name and birthdate
   % else:
-  Name of the ${ ordinal(i) } child
+  Fill in your ${ ordinal(i) } child's name and birthdate
   % endif
 fields:
   - code: |

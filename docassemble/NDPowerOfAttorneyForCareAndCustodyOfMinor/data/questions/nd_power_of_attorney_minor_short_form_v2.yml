@@ -72,11 +72,10 @@ code: |
   al_form_type = "other_form"
 ---
 id: alweaver assemblyline settings
-initial: True
 code: |
   # Managed by the graphical AssemblyLine settings editor.
   allowed_courts = []
-  AL_ORGANIZATION_TITLE = ''
+  AL_ORGANIZATION_TITLE = "CourtFormsOnline"
   AL_ORGANIZATION_HOMEPAGE = ''
   AL_DEFAULT_LANGUAGE = 'en'
   AL_DEFAULT_OVERFLOW_MESSAGE = '...'
@@ -103,6 +102,7 @@ code: |
   # AL_DEFAULT_STATE is set in one of your own code blocks, not here.
   # al_form_type is set in one of your own code blocks, not here.
   # github_repo_name is set in one of your own code blocks, not here.
+  
 ---
 objects:
   - attorney_in_fact: ALPeopleList.using(ask_number=True,target_number=1)
@@ -157,6 +157,7 @@ code: |
   nav.set_section('sign_and_submit')
   if with_notary_now:
     basic_questions_signature_flow
+    notary
     notary_date
   set_progress(100)
   nd_power_of_attorney_minor_short_form_v2_download
@@ -173,13 +174,13 @@ subquestion: |2
   
   ### Before you get started
   - You will need your child(ren)'s names and birth dates.
-  - You will need the name and address of the person you wish to name as attorney-in-fact.
-  - Make sure your attorney-in-fact is age 18 or older.
-  - Make sure you understand the powers you are delegating. [Here are some examples](https://ndlegis.gov/cencode/t14c09.pdf#nameddest=14-09-32) of rights and responsibilities that you could delegate.
+  - You will need the name and address of the person you choose to care for your child(ren).
+  - Make sure the person you choose is age 18 or older.
+  - Decide which powers you want your chosen person to have.
   
   ### When you are finished
   - Sign the form in front of a notary public or clerk of court to make it official.
-  - Give copies to your attorney-in-fact and keep one for your records.
+  - Give copies to the person you have chosen and keep one for your records.
 ---
 id: prelim questions
 question: |2
@@ -188,9 +189,9 @@ subquestion: |
   Let's make sure this is the right form for you.
 fields:
   - note: |
-      Contact your child's school, medical provider, or day care to see if they will accept a power of attorney. Some places will only accept a court order.
+      Contact your child's school, medical provider, or day care to see if they will accept a power of attorney. This form is a power of attorney. Some places will not accept this form.
       
-  - Will a power of attorney be accepted where you need it?: power_of_attorney_accepted
+  - "Will your child's school or provider accept a power of attorney form?": power_of_attorney_accepted
     datatype: yesnoradio
   - label: For how long do you want to delegate your power?
     field: delegate_length
@@ -204,17 +205,18 @@ id: exit guardianship
 event: exit_guardianship
 question: This is not the right form for you.
 subquestion: |2
-  You might need a guardianship if:
-  * You want to delegate your powers for more than six months
+  You might need a different form if:
   * Your child's school or provider does not accept a power of attorney
+  * You want to delegate your power for more than six months
   * To learn more, visit the North Dakota courts web page on [minor guardianships](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
 buttons:
   - Exit: exit
+    url: https://www.ndcourts.gov/legal-self-help
 ---
 id: attorney_in_fact_age_check
-question: "Attorney-in-fact age"
+question: "Age of caretaker"
 fields:
-  - How old is the person you will choose for your attorney-in-fact?: attorney_in_fact_age
+  - How old is the person you will choose to care for your child(ren)?: attorney_in_fact_age
     datatype: radio
     choices:
       - "18 or older"
@@ -227,7 +229,7 @@ code: |
 ---
 id: exit attorney in fact under 18
 question: "You will need to choose someone else"
-subquestion: "The attorney-in-fact must be age 18 or older. If you want to choose someone else who is 18 or older, click undo. If you cannot choose someone over 18, click exit."
+subquestion: "The caretaker must be age 18 or older. If you want to choose someone else, click undo. If you cannot choose someone over 18, click exit."
 buttons:
   - Exit: exit
 event: attorney_in_fact_age_warning
@@ -318,7 +320,7 @@ id: Notary Information
 question: |2
   Notary Information (optional)
 subquestion: |2
-  If you are with a notary, fill in the information below. If not, click Next.
+  If you are with a notary now, fill in the information below. If you are with a court clerk, click Next.
 fields:
   - label: Date of notary signing
     field: notary_date
@@ -328,6 +330,7 @@ fields:
   - label: Notary commission expiration date
     field: notary_commission_expiration_date
     datatype: date
+    min: "${ today() }"
     required: False
 ---
 comment: |

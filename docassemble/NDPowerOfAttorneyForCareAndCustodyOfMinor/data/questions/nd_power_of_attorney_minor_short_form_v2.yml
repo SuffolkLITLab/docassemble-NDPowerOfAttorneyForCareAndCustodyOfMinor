@@ -165,9 +165,9 @@ id: ND Power of Attorney Minor Short Form v2 intro
 continue button field: nd_power_of_attorney_minor_short_form_v2_intro
 question: "North Dakota power of attorney for care and custody of minor child(ren)"
 subquestion: |2
-  A power of attorney names another person, called the attorney-in-fact, to step into your shoes and make decisions for a child under age 18.
+  A power of attorney names another person to step into your shoes and make decisions for your child(ren). This person is called the attorney-in-fact.
   
-  You can use this form if you are a parent or legal guardian. You may delegate any or all of your powers for care, custody, or property of your minor child, except the power to consent to marriage or adoption.
+  You can use this form if you are a parent or legal guardian. You may delegate any or all of your parental powers, except the power to consent to marriage or adoption.
   
   A power of attorney lasts for six months or less. If you need to delegate your power for longer than six months, you might need a [guardianship](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
   
@@ -175,7 +175,7 @@ subquestion: |2
   - You will need your child(ren)'s names and birth dates.
   - You will need the name and address of the person you wish to name as attorney-in-fact.
   - Make sure your attorney-in-fact is age 18 or older.
-  - Make sure you understand the powers you are delegating. [Click here](https://ndlegis.gov/cencode/t14c09.pdf#nameddest=14-09-32) to see examples of some rights and responsibilities that you could delegate.
+  - Make sure you understand the powers you are delegating. [Here are some examples](https://ndlegis.gov/cencode/t14c09.pdf#nameddest=14-09-32) of rights and responsibilities that you could delegate.
   
   ### When you are finished
   - Sign the form in front of a notary public or clerk of court to make it official.
@@ -285,13 +285,13 @@ fields:
       - Consent for activities
       - Health care decisions
       - Power to sign other documents
-      - "Other (fill in below):"
+      - "Other (fill in below):": other
     none of the above: false
     show if: delegate_specific_authority_yes
-    input type: area
   - label: "Describe the power you want to delegate:"
     field: specific_authority_other
-    show if: "specific_authority['Other (fill in below):']"
+    input type: area
+    show if: "specific_authority['other']"
 ---
 id: Authority Duration
 question: |2
@@ -390,11 +390,7 @@ sets:
   - notary[i].name.middle
   - notary[i].name.suffix
 question: |2
-  % if hasattr(notary, 'ask_number') and notary.ask_number and notary.target_number == 1:
   Name of notary or court clerk
-  % else:
-  Name of the ${ ordinal(i) } notary
-  % endif
 fields:
   - code: |
       notary[i].name_fields()
@@ -406,14 +402,7 @@ sets:
   - users[i].name.middle
   - users[i].name.suffix
 question: |
-  % if i == 0 and al_person_answering == "user":
   What is your name?
-  % elif al_form_type in ['starts_case', 'existing_case', 'appeal']:
-  Who is the ${ ordinal(i) } person on your side of the case?
-  % else:
-  What is the name of the ${ ordinal(i) } person who is adding their
-  name to this form with you?
-  % endif
 fields:
   - code: |
       users[i].name_fields()
@@ -724,7 +713,7 @@ attachment:
       - "attorney_in_fact_address_line_two": ${ attorney_in_fact[0].address.line_two() }
       - "delegate_all_powers_yes": ${ delegate_all_powers_yes }
       - "delegate_specific_authority_yes": ${ delegate_specific_authority_yes }
-      - "specific_authority": ${ specific_authority }
+      - "specific_authority": ${ ", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else [])) }
       - "users1_end_date": ${ users1_end_date.format() }
       - "signature_date": ${ signature_date.format() }
       - "users1_signature": ${ users[0].signature_if_final(i) }

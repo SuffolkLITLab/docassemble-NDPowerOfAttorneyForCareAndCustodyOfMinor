@@ -92,12 +92,13 @@ code: |
   al_next_steps_enabled = True
   al_next_steps_document_title = 'Power of Attorney'
   al_next_steps_document_purpose = 'authorization'
-  al_next_steps_help_organization = ''
-  al_next_steps_help_url = ''
+  al_next_steps_help_organization = 'Legal Services of North Dakota'
+  al_next_steps_help_url = 'https://lsnd.org'
+  al_next_steps_nd_court_self_help = 'https://www.ndcourts.gov/legal-self-help'
   al_next_steps_generate_qr_code = False
-  al_next_steps_what_happens_next = 'After completing the form, ensure it is signed and notarized. Share copies with the appointed individual and keep a copy for yourself. This will help ensure that your wishes are followed.'
-  al_next_steps_what_can_decision_maker_do = "The decision-maker can make choices regarding the child's care and custody as specified in the form. They cannot consent to marriage or adoption unless explicitly allowed."
-  al_next_steps_what_happens_if_i_win = "If the appointed attorney-in-fact successfully carries out their duties, your child's needs will be met according to your wishes. You can revoke the power of attorney at any time if circumstances change."
+  al_next_steps_what_happens_next = 'After completing the form, sign it with a notary or court clerk. Share copies with the decision-maker you chose and keep a copy for yourself. This will help make sure that your wishes are followed.'
+  al_next_steps_what_can_decision_maker_do = "The decision-maker can make choices regarding your child(ren)'s care and custody as you wrote in the form. They cannot consent to marriage or adoption."
+  al_next_steps_what_happens_if_i_win = "If the appointed attorney-in-fact successfully carries out their duties, your child's needs will be met according to your wishes. You can revoke the decision-maker's powers at any time."
   # AL_DEFAULT_COUNTRY is set in one of your own code blocks, not here.
   # AL_DEFAULT_STATE is set in one of your own code blocks, not here.
   # al_form_type is set in one of your own code blocks, not here.
@@ -704,11 +705,11 @@ attachment:
       - "users1_is_parent": ${ users1_is_parent }
       - "users1_is_legal_guardian": ${ users1_is_legal_guardian }
       - "children1_name": ${ children[0] }
-      - "children1_birthdate": ${ children[0].birthdate.format() }
+      - "children1_birthdate": ${ format_date(children[0].birthdate, format='MMM d, yyyy') }
       - "children2_name": ${ children[1] }
-      - "children2_birthdate": ${ children[1].birthdate.format() }
+      - "children2_birthdate": ${ format_date(children[1].birthdate, format='MMM d, yyyy') }
       - "children3_name": ${ children[2] }
-      - "children3_birthdate": ${ children[2].birthdate.format() }
+      - "children3_birthdate": ${ format_date(children[2].birthdate, format='MMM d, yyyy') }
       - "users1_address_line_one": ${ users[0].address.line_one() }
       - "users1_address_line_two": ${ users[0].address.line_two() }
       - "attorney_in_fact_name": ${ attorney_in_fact[0] }

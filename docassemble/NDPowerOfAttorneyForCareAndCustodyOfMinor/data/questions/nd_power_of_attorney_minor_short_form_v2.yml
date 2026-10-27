@@ -5,7 +5,7 @@ include:
 ---
 metadata:
   title: >-
-    ND Power of Attorney Minor Short Form v2
+    North Dakota delegation of parental powers form
   short title: >-
     ND Power of Attorney Mino
   description: |-
@@ -66,7 +66,7 @@ code: |
 ---
 template: interview_short_title
 content: |
-  Grant authority for care and custody of minor child(ren)
+  North Dakota delegation of parental powers form
 ---
 code: |
   al_form_type = "other_form"
@@ -177,7 +177,6 @@ subquestion: |2
   - You will need your child(ren)'s names and birth dates.
   - You will need the name and address of the person you choose to care for your child(ren).
   - Make sure the person you choose is age 18 or older.
-  - Decide which powers you want your chosen person to have.
   
   ### When you are finished
   - Sign the form in front of a notary public or clerk of court to make it official.
@@ -207,8 +206,11 @@ event: exit_guardianship
 question: This is not the right form for you.
 subquestion: |2
   You might need a different form if:
+  
   * Your child's school or provider does not accept a power of attorney
+  
   * You want to delegate your power for more than six months
+  
   * To learn more, visit the North Dakota courts web page on [minor guardianships](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
 buttons:
   - Exit: exit
@@ -444,41 +446,52 @@ review:
   - Edit: users
     action: users.revisit
     button: |
-      **Your name**
+      **Your contact info**
       % for item in users:
-      - ${ item }
+      
+      ${ item }
       % endfor
+      
+      ${ showifdef('users[0].address') }
+
+      ${ phone_number_formatted(users[0].phone_number) }
+
+  # - Edit: "users[0].address"
+  #   button: |
+  #     **Your address**
+      
+  #     - ${ showifdef('users[0].address') }
   - Edit: users1_is_parent
     button: |
       **Parent or legal guardian**
+      
       I am a parent: ${ word(yesno(users1_is_parent)) if defined('users1_is_parent') else '' }
+      
       I am a legal guardian: ${ word(yesno(users1_is_legal_guardian)) if defined('users1_is_legal_guardian') else '' }
   - Edit: children
     action: children.revisit
     button: |
       **Your children**
+
       % for item in children:
-      - ${ item }
+      - ${ item.name.full() }, born ${ format_date(item.birthdate, format='MMM d, yyyy') if defined('item.birthdate') else '' }
       % endfor
-  - Edit: "children[0].birthdate"
-    button: |
-      **Child's birthdate**
-      - ${ showifdef('children[0].birthdate') }
-  - Edit: "users[0].address"
-    button: |
-      **Your Address**
-      - ${ showifdef('users[0].address') }
+
   - Edit: attorney_in_fact
     action: attorney_in_fact.revisit
     button: |
-      **Attorney-in-fact**
+      **Person you are delegating to**
+      
       % for item in attorney_in_fact:
-      - ${ item }
+      ${ item }
       % endfor
-  - Edit: "attorney_in_fact[0].address"
-    button: |
-      **Attorney-in-fact's address**
-      - ${ showifdef('attorney_in_fact[0].address') }
+      
+      ${ showifdef('attorney_in_fact[0].address') }
+  # - Edit: "attorney_in_fact[0].address"
+  #   button: |
+  #     **${ attorney_in_fact[0].name.full() }'s address**
+      
+  #     ${ showifdef('attorney_in_fact[0].address') }
   - Edit: notary
     action: notary.revisit
     button: |
@@ -499,16 +512,25 @@ review:
       % endif
   - Edit: delegate_all_powers_yes
     button: |
-      **Are you delegating all powers?**
-      - ${ word(yesno(delegate_all_powers_yes)) if defined('delegate_all_powers_yes') else '' }
-  - Edit: delegate_specific_authority_yes
-    button: |
-      **Are you delegating specific powers?**
-      - ${ word(yesno(delegate_specific_authority_yes)) if defined('delegate_specific_authority_yes') else '' }
-  - Edit: specific_authority
-    button: |
-      **Specific powers you are delegating**
-      Details of specific authority: ${ single_paragraph(specific_authority) if defined('specific_authority') else '' }
+      **Powers you are delegating**
+
+      % if delegate_specific_authority_yes:
+      Specific powers: ${ ", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else [])) }
+      % else:
+      All parental powers
+      % endif
+  # - Edit: delegate_all_powers_yes
+  #   button: |
+  #     **Are you delegating all powers?**
+  #     - ${ word(yesno(delegate_all_powers_yes)) if defined('delegate_all_powers_yes') else '' }
+  # - Edit: delegate_specific_authority_yes
+  #   button: |
+  #     **Are you delegating specific powers?**
+  #     - ${ word(yesno(delegate_specific_authority_yes)) if defined('delegate_specific_authority_yes') else '' }
+  # - Edit: specific_authority
+  #   button: |
+  #     **Specific powers you are delegating**
+  #     Details of specific authority: ${ single_paragraph(specific_authority) if defined('specific_authority') else '' }
   - Edit: users1_end_date
     button: |
       **End date of authority**
@@ -518,10 +540,6 @@ review:
       **Notary Information**
       Date of notary signing: ${ showifdef('notary_date') }
       Notary commission expiration date: ${ showifdef('notary_commission_expiration_date') }
-  - Edit: "users[0].phone_number"
-    button: |
-      **Your phone number**
-      - ${ showifdef('users[0].phone_number') }
   - Edit: users1_email_address
     button: |
       **Your email**
@@ -717,7 +735,8 @@ attachment:
       - "attorney_in_fact_address_line_two": ${ attorney_in_fact[0].address.line_two() }
       - "delegate_all_powers_yes": ${ delegate_all_powers_yes }
       - "delegate_specific_authority_yes": ${ delegate_specific_authority_yes }
-      - "specific_authority": ${ ", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else [])) }
+      #- "specific_authority": ${ ", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else [])) }
+      - "specific_authority": ${ (", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else []))) if delegate_specific_authority_yes else "" }
       - "users1_end_date": ${ users1_end_date.format() }
       - "signature_date": ${ signature_date.format() }
       - "users1_signature": ${ users[0].signature_if_final(i) }

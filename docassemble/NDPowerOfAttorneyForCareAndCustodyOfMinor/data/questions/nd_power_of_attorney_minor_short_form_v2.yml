@@ -455,7 +455,10 @@ review:
       ${ showifdef('users[0].address') }
 
       ${ phone_number_formatted(users[0].phone_number) }
-
+  - Edit: users1_email_address
+    button: |
+      **Your email**
+      - ${ showifdef('users1_email_address') }
   # - Edit: "users[0].address"
   #   button: |
   #     **Your address**
@@ -540,10 +543,6 @@ review:
       **Notary Information**
       Date of notary signing: ${ showifdef('notary_date') }
       Notary commission expiration date: ${ showifdef('notary_commission_expiration_date') }
-  - Edit: users1_email_address
-    button: |
-      **Your email**
-      - ${ showifdef('users1_email_address') }
   - Edit: notary_commission_expiration_date
     button: |
       **Notary commission expiration date**
@@ -738,10 +737,11 @@ attachment:
       #- "specific_authority": ${ ", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else [])) }
       - "specific_authority": ${ (", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else []))) if delegate_specific_authority_yes else "" }
       - "users1_end_date": ${ users1_end_date.format() }
-      - "signature_date": ${ signature_date.format() }
+      #- "signature_date": ${ signature_date.format() }
+      - "signature_date": ${ signature_date.format() if with_notary_now else []}
       - "users1_signature": ${ users[0].signature_if_final(i) }
       - "users1_address_on_one_line": ${ users[0].address.on_one_line() }
-      - "users1_phone_number": ${ users[0].phone_number }
+      - "users1_phone_number": ${ phone_number_formatted(users[0].phone_number) }
       - "users1_email_address": ${ users1_email_address }
       - "notary_date": ${ notary_date.format() }
       - "notary_signature": ${ notary[0].signature_if_final(i) }

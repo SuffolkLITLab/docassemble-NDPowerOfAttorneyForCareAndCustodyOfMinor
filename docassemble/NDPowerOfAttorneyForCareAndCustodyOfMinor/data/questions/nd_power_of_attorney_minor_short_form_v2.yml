@@ -166,7 +166,7 @@ code: |
 ---
 id: ND Power of Attorney Minor Short Form v2 intro
 continue button field: nd_power_of_attorney_minor_short_form_v2_intro
-question: "North Dakota power of attorney for care and custody of minor child(ren)"
+question: "North Dakota delegation of parental powers"
 subquestion: |2
   A power of attorney names another person to step into your shoes and make decisions for your child(ren). This person is called the attorney-in-fact.
   

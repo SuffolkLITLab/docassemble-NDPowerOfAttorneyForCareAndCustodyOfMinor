@@ -160,6 +160,7 @@ code: |
     basic_questions_signature_flow
     notary
     notary_date
+    notary_county
   set_progress(100)
   nd_power_of_attorney_minor_short_form_v2_download
 ---
@@ -335,6 +336,67 @@ fields:
     datatype: date
     min: "${ today() }"
     required: False
+---
+id: Notary County
+question: "Where are you signing this form?"
+fields:
+  - label: "Choose your county:"
+    field: notary_county
+    datatype: dropdown
+    choices:
+      - "Adams County"
+      - "Barnes County"
+      - "Benson County"
+      - "Billings County"
+      - "Bottineau County"
+      - "Bowman County"
+      - "Burke County"
+      - "Burleigh County"
+      - "Cass County"
+      - "Cavalier County"
+      - "Dickey County"
+      - "Divide County"
+      - "Dunn County"
+      - "Eddy County"
+      - "Emmons County"
+      - "Foster County"
+      - "Golden Valley County"
+      - "Grand Forks County"
+      - "Grant County"
+      - "Griggs County"
+      - "Hettinger County"
+      - "Kidder County"
+      - "LaMoure County"
+      - "Logan County"
+      - "McHenry County"
+      - "McIntosh County"
+      - "McKenzie County"
+      - "McLean County"
+      - "Mercer County"
+      - "Morton County"
+      - "Mountrail County"
+      - "Nelson County"
+      - "Oliver County"
+      - "Pembina County"
+      - "Pierce County"
+      - "Ramsey County"
+      - "Ransom County"
+      - "Renville County"
+      - "Richland County"
+      - "Rolette County"
+      - "Sargent County"
+      - "Sheridan County"
+      - "Sioux County"
+      - "Slope County"
+      - "Stark County"
+      - "Steele County"
+      - "Stutsman County"
+      - "Towner County"
+      - "Traill County"
+      - "Walsh County"
+      - "Ward County"
+      - "Wells County"
+      - "Williams County"
 ---
 comment: |
   The questions below are copies of the questions in AssemblyLine's
@@ -629,7 +691,8 @@ id: with notary
 question: "Are you ready to sign now?"
 subquestion: "You need to sign this form in front of a notary or a court clerk. If you are not ready, you can print a copy of the form and sign it later."
 fields:
-  - Are you with a notary or court clerk now?: with_notary_now
+  - label: Are you with a notary or court clerk now?
+    field: with_notary_now
     datatype: yesnoradio
 ---
 table: notary.table
@@ -717,7 +780,7 @@ attachment:
   fields:
       - "users1_name_full": ${ users[0] }
       - "users1_name_full__1": ${ users[0] }
-      - "users1_name_full__2": ${ users[0] }
+      #- "users1_name_full__2": ${ users[0] }
       - "users1_name__1": ${ users[0] }
       - "users1_is_parent": ${ users1_is_parent }
       - "users1_is_legal_guardian": ${ users1_is_legal_guardian }
@@ -737,12 +800,13 @@ attachment:
       #- "specific_authority": ${ ", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else [])) }
       - "specific_authority": ${ (", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else []))) if delegate_specific_authority_yes else "" }
       - "users1_end_date": ${ users1_end_date.format() }
-      #- "signature_date": ${ signature_date.format() }
-      - "signature_date": ${ signature_date.format() if with_notary_now else []}
+      - "signature_date": ${ signature_date.format() }
+      #- "signature_date": ${ signature_date.format() if with_notary_now else []}
       - "users1_signature": ${ users[0].signature_if_final(i) }
       - "users1_address_on_one_line": ${ users[0].address.on_one_line() }
       - "users1_phone_number": ${ phone_number_formatted(users[0].phone_number) }
       - "users1_email_address": ${ users1_email_address }
+      - "users1_name_full__2": ${ users[0].name.full() + (", " + notary_county + ", North Dakota" if defined('with_notary_now') and with_notary_now and defined('notary_county') else "") }
       - "notary_date": ${ notary_date.format() }
       - "notary_signature": ${ notary[0].signature_if_final(i) }
       - "notary_commission_expiration_date": ${ notary_commission_expiration_date.format() }

@@ -168,13 +168,13 @@ code: |
 ---
 id: ND Power of Attorney Minor Short Form v2 intro
 continue button field: nd_power_of_attorney_minor_short_form_v2_intro
-question: "North Dakota delegation of parental powers"
+question: "North Dakota: giving someone permission to make decisions for your child"
 subquestion: |2
-  A power of attorney names another person to step into your shoes and make decisions for your child(ren). This person is called the attorney-in-fact.
+  This power of attorney form lets you choose another person to make decisions for your child. This person is called the attorney-in-fact.
   
-  You can use this form if you are a parent or legal guardian. You may delegate any or all of your parental powers, except the power to consent to marriage or adoption.
+  You can use this form if you are a parent or legal guardian. You can give this person some or all of your parental rights and responsibilities. This person will not be able to allow your child to marry or be adopted.
   
-  A power of attorney lasts for six months or less. If you need to delegate your power for longer than six months, you might need a [guardianship](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
+  A power of attorney lasts for six months or less. If you need someone to make decisions for longer than six months, you might need a [guardianship](https://www.ndcourts.gov/legal-self-help/minor-guardianship).
   
   ### Before you get started
   - You will need your child(ren)'s names and birth dates.
@@ -317,10 +317,9 @@ fields:
 id: Contact Information
 question: |2
   Email contact
-subquestion: |2+
-  
 fields:
   - What is your email address?: users1_email_address
+    datatype: email
 ---
 id: Notary Information
 question: |2
@@ -445,6 +444,9 @@ fields:
       children[i].name_fields()
   - Birthdate: "children[i].birthdate"
     datatype: BirthDate
+validation code: |
+  if date_difference(starting=children[i].birthdate, ending=today()).years >= 18:
+    validation_error("Check the birthdate. Your child must be under 18 if you want to add them to this form.", field="children[i].birthdate")
 ---
 id: another child
 question: |

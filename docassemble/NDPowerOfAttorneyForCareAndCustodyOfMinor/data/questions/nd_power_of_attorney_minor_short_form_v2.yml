@@ -249,8 +249,8 @@ fields:
   - What is your name?: users1_name_full
 ---
 id: Guardian Information
-question: |
-  Guardian Information
+question: |2
+  Relationship
 subquestion: |2
   What is your relationship to the children?
 fields:
@@ -273,19 +273,18 @@ fields:
 ---
 id: Powers To Delegate
 question: |2
-  Choose which powers to delegate
+  Choose which powers to give
 subquestion: |2
-  Would you like to delegate all the powers that you have as a parent or guardian?
+  Would you like to give all the powers that you have as a parent or guardian?
 fields:
-  - "Yes, delegate all powers.": delegate_all_powers_yes
+  - "Yes, give all powers.": delegate_all_powers_yes
     datatype: yesno
-    uncheck others:
-      - delegate_specific_authority_yes
+    uncheck others: ["delegate_specific_authority_yes"]
   - "No, I need to choose specific powers.": delegate_specific_authority_yes
     datatype: yesno
     uncheck others:
       - delegate_all_powers_yes
-  - label: "Choose the powers you want to delegate:"
+  - label: "Choose the powers you want to give:"
     field: specific_authority
     datatype: checkboxes
     choices:
@@ -296,18 +295,16 @@ fields:
       - "Other (fill in below):": other
     none of the above: false
     show if: delegate_specific_authority_yes
-  - label: "Describe the power you want to delegate:"
+  - label: "Describe the power you want to give:"
     field: specific_authority_other
     input type: area
     show if: "specific_authority['other']"
 ---
 id: Authority Duration
 question: |2
-  Length of time to delegate
-subquestion: |2+
-  
+  Length of time
 fields:
-  - label: "Choose the end date for your delegation of power:"
+  - label: When do you want this to end?
     field: users1_end_date
     datatype: date
     help: Must be within 6 months.
@@ -413,7 +410,7 @@ sets:
   - attorney_in_fact[i].name.suffix
 question: |2
   % if hasattr(attorney_in_fact, 'ask_number') and attorney_in_fact.ask_number and attorney_in_fact.target_number == 1:
-  Who are you delegating your power to?
+  Who are you giving your power to?
   % endif
 fields:
   - code: |
@@ -532,11 +529,15 @@ review:
   #     - ${ showifdef('users[0].address') }
   - Edit: users1_is_parent
     button: |
-      **Parent or legal guardian**
-      
-      I am a parent: ${ word(yesno(users1_is_parent)) if defined('users1_is_parent') else '' }
-      
-      I am a legal guardian: ${ word(yesno(users1_is_legal_guardian)) if defined('users1_is_legal_guardian') else '' }
+      **Your relationship to the child(ren)**
+
+      % if defined('users1_is_parent') and users1_is_parent:
+      I am a parent
+
+      % endif
+      % if defined('users1_is_legal_guardian') and users1_is_legal_guardian:
+      I am a legal guardian
+      % endif
   - Edit: children
     action: children.revisit
     button: |
@@ -549,7 +550,7 @@ review:
   - Edit: attorney_in_fact
     action: attorney_in_fact.revisit
     button: |
-      **Person you are delegating to**
+      **Person you are giving your power to**
       
       % for item in attorney_in_fact:
       ${ item }
@@ -570,7 +571,7 @@ review:
       % endfor
   - Edit: delegate_all_powers_yes
     button: |
-      **Choice of powers to delegate.**
+      **Choice of powers to give**
       Yes, delegate all powers.: ${ word(yesno(delegate_all_powers_yes)) if defined('delegate_all_powers_yes') else '' }
       No, I need to choose specific powers.: ${ word(yesno(delegate_specific_authority_yes)) if defined('delegate_specific_authority_yes') else '' }
       % if showifdef('delegate_specific_authority_yes'):
@@ -581,7 +582,7 @@ review:
       % endif
   - Edit: delegate_all_powers_yes
     button: |
-      **Powers you are delegating**
+      **Which decision-making powers are you giving?**
 
       % if delegate_specific_authority_yes:
       Specific powers: ${ ", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else [])) }
@@ -602,7 +603,7 @@ review:
   #     Details of specific authority: ${ single_paragraph(specific_authority) if defined('specific_authority') else '' }
   - Edit: users1_end_date
     button: |
-      **End date of authority**
+      **When this form's power will end**
       - ${ showifdef('users1_end_date') }
   - Edit: notary_date
     button: |

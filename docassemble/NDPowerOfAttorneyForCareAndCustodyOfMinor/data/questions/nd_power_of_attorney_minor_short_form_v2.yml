@@ -33,9 +33,9 @@ metadata:
   estimated_completion_minutes: ""
   estimated_completion_delta: ""
   LIST_topics:
-    - "CO-00-00-00-00"
+    - "ES-03-03-00-00"
   tags:
-    - "CO-00-00-00-00"
+    - "ES-03-03-00-00"
   authors:
     - Court Forms Online
   original_form: []
@@ -46,7 +46,7 @@ metadata:
   generated_on: "2026-09-18"
   languages:
     - en
-  jurisdiction: "NAM-US"
+  jurisdiction: "NAM-US-ND"
   review_date: 2026-09-18
   form_titles:
     - ND Power of Attorney Minor Short Form v2

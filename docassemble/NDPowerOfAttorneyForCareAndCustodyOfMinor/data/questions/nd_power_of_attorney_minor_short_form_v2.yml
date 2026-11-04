@@ -273,18 +273,19 @@ fields:
 ---
 id: Powers To Delegate
 question: |2
-  Choose which powers to give
+  Choose which rights and responsibilities to give
 subquestion: |2
-  Would you like to give all the powers that you have as a parent or guardian?
+  Would you like to give all the rights and responsibilities that you have as a parent or guardian?
 fields:
-  - "Yes, give all powers.": delegate_all_powers_yes
+  - label: "Yes, give all rights."
+    field: delegate_all_powers_yes
     datatype: yesno
+    help: The caretaker will not be able to allow your child to marry or be adopted.
     uncheck others: ["delegate_specific_authority_yes"]
-  - "No, I need to choose specific powers.": delegate_specific_authority_yes
+  - "No, I need to choose specific rights.": delegate_specific_authority_yes
     datatype: yesno
-    uncheck others:
-      - delegate_all_powers_yes
-  - label: "Choose the powers you want to give:"
+    uncheck others: ["delegate_all_powers_yes"]
+  - label: "Choose the rights you want to give:"
     field: specific_authority
     datatype: checkboxes
     choices:
@@ -295,7 +296,7 @@ fields:
       - "Other (fill in below):": other
     none of the above: false
     show if: delegate_specific_authority_yes
-  - label: "Describe the power you want to give:"
+  - label: "Describe the rights you want to give:"
     field: specific_authority_other
     input type: area
     show if: "specific_authority['other']"
@@ -486,7 +487,7 @@ id: preview nd_power_of_attorney_minor_short_form_v2
 question: |
   Preview your form before you sign it
 subquestion: |
-  Here is a preview of the form you will sign on the next page.
+  Here is a preview of your form. Check it before you continue.
 
   ${ al_recipient_bundle.as_pdf(key='preview') }
 
@@ -712,7 +713,6 @@ id: download nd_power_of_attorney_minor_short_form_v2
 event: nd_power_of_attorney_minor_short_form_v2_download
 question: "You are almost done"
 subquestion: |2
-  Debug: with_notary_now = ${ with_notary_now if defined('with_notary_now') else 'not defined' }, notary_county = ${ notary_county if defined('notary_county') else 'not defined' }
   Thank you ${users}. Your form is ready to download.
   
   Use the options on this page to view, download and send your form. Use the
@@ -728,7 +728,7 @@ progress: 100
 # ALDocument objects specify the metadata for each template
 objects:
   - nd_power_of_attorney_minor_short_form_v2_Post_interview_instructions: ALDocument.using(filename="nd_power_of_attorney_minor_next_steps.docx", enabled=al_next_steps_enabled, title="Next steps", has_addendum=False)
-  - nd_power_of_attorney_minor_short_form_v2_attachment: ALDocument.using(filename="nd_power_of_attorney_minor_form", enabled=True, title="Your form", has_addendum=True)
+  - nd_power_of_attorney_minor_short_form_v2_attachment: ALDocument.using(filename="nd_power_of_attorney_minor_form", enabled=True, title="Power of attorney form", has_addendum=True)
 ---
 code: |
   nd_power_of_attorney_minor_short_form_v2_attachment.overflow_fields['children'].label = "Additional children"

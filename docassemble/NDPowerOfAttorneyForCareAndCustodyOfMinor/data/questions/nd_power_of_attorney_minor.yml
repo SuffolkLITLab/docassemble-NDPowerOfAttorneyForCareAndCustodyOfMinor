@@ -300,6 +300,7 @@ fields:
   - label: "Describe the rights you want to give:"
     field: specific_authority_other
     input type: area
+    maxlength: 165
     show if: "specific_authority['other']"
 ---
 id: Authority Duration

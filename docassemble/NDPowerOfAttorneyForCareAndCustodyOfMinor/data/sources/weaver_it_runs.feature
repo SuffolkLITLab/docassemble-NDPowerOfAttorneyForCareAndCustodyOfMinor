@@ -1,9 +1,9 @@
-Feature: nd_power_of_attorney_minor_short_form_v2.yml runs to completion
+Feature: nd_power_of_attorney_minor.yml runs to completion
 
-Scenario: nd_power_of_attorney_minor_short_form_v2.yml runs to completion
-  Given I start the interview at "nd_power_of_attorney_minor_short_form_v2.yml"
+Scenario: nd_power_of_attorney_minor.yml runs to completion
+  Given I start the interview at "nd_power_of_attorney_minor.yml"
   And I check all pages for accessibility issues
-  And the user gets to "download nd_power_of_attorney_minor_short_form_v2" with this data:
+  And the user gets to "download nd_power_of_attorney_minor" with this data:
     | var | value |
     | users1_is_parent | True |
     | users1_is_legal_guardian | True |

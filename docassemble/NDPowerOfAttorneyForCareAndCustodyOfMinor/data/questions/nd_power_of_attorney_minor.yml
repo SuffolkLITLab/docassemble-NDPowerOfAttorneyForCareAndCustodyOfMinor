@@ -625,7 +625,9 @@ question: |
 subquestion: |
   ${ users.table }
 
+  % if users.number_gathered() < 1:
   ${ users.add_action() }
+  % endif
 ---
 table: users.table
 rows: users
@@ -672,7 +674,9 @@ question: |
 subquestion: |
   ${ attorney_in_fact.table }
 
+  % if attorney_in_fact.number_gathered() < 1:
   ${ attorney_in_fact.add_action() }
+  % endif
 ---
 table: attorney_in_fact.table
 rows: attorney_in_fact
@@ -693,7 +697,9 @@ question: |
 subquestion: |
   ${ notary.table }
 
+  % if notary.number_gathered() < 1:
   ${ notary.add_action() }
+  % endif
 ---
 id: with notary
 question: "Are you ready to sign now?"

@@ -5,7 +5,7 @@ include:
 ---
 metadata:
   title: >-
-    North Dakota form to give parental rights to someone else
+    North Dakota: Power of Attorney for Care and Custody of a Minor
   short title: >-
     ND parental rights form
   description: |-
@@ -47,7 +47,7 @@ metadata:
   generated_on: "2026-09-18"
   languages:
     - en
-  jurisdiction: "NAM-US-ND"
+  jurisdiction: "NAM-US-US+ND"
   review_date: 2026-09-18
   form_titles:
     - North Dakota Power of Attorney for Care and Custody of Minor

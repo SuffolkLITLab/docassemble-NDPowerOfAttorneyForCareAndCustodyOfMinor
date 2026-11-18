@@ -1,4 +1,11 @@
 ---
+translations:
+  - FamilySpanish05_es.xlsx
+---
+include:
+  - family_spanish_words.yml
+---
+---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
   - docassemble.ALAnyState:any_state.yml
@@ -46,8 +53,7 @@ metadata:
   typical_role: "unknown"
   al_weaver_version: "2.3.1"
   generated_on: "2026-09-18"
-  languages:
-    - en
+  languages: [en, es]
   jurisdiction: "NAM-US-US+ND"
   review_date: 2026-09-18
   form_titles:
@@ -89,18 +95,13 @@ code: |
   speak_text = True
   enable_al_language = True
   al_user_default_language = 'en'
-  al_interview_languages = ['en']
+  al_interview_languages = ["en", "es"]
   github_user = ''
   al_next_steps_enabled = True
-  al_next_steps_document_title = 'Power of attorney'
-  al_next_steps_document_purpose = 'authorization'
   al_next_steps_help_organization = 'Legal Services of North Dakota'
   al_next_steps_help_url = 'https://lsnd.org'
-  al_next_steps_nd_court_self_help = 'https://www.ndcourts.gov/legal-self-help'
+  al_next_steps_nd_court_self_help = word('https://www.ndcourts.gov/legal-self-help')
   al_next_steps_generate_qr_code = False
-  al_next_steps_what_happens_next = 'After completing the form, sign it with a notary or court clerk. Share copies with the decision-maker you chose and keep a copy for yourself. This will help make sure that your wishes are followed.'
-  al_next_steps_what_can_decision_maker_do = "The decision-maker can make choices regarding your child(ren)'s care and custody as you wrote in the form. They cannot consent to marriage or adoption."
-  al_next_steps_what_happens_if_i_win = "If the appointed attorney-in-fact successfully carries out their duties, your child's needs will be met according to your wishes. You can revoke the decision-maker's powers at any time."
   # AL_DEFAULT_COUNTRY is set in one of your own code blocks, not here.
   # AL_DEFAULT_STATE is set in one of your own code blocks, not here.
   # al_form_type is set in one of your own code blocks, not here.
@@ -202,8 +203,8 @@ fields:
     field: delegate_length
     datatype: radio
     choices:
-      - Six months or less
-      - Longer than six months
+      - {label: "Six months or less", value: "Six months or less"}
+      - {label: "Longer than six months", value: "Longer than six months"}
     show if: power_of_attorney_accepted
 ---
 id: exit guardianship
@@ -227,8 +228,8 @@ fields:
   - How old is the person you will choose to care for your child(ren)?: attorney_in_fact_age
     datatype: radio
     choices:
-      - "18 or older"
-      - Under 18
+      - {label: "18 or older", value: "18 or older"}
+      - {label: "Under 18", value: "Under 18"}
 ---
 code: |
   delegate_length
@@ -291,10 +292,10 @@ fields:
     field: specific_authority
     datatype: checkboxes
     choices:
-      - Education decisions
-      - Consent for activities
-      - Health care decisions
-      - Power to sign other documents
+      - {label: "Education decisions", value: "Education decisions"}
+      - {label: "Consent for activities", value: "Consent for activities"}
+      - {label: "Health care decisions", value: "Health care decisions"}
+      - {label: "Power to sign other documents", value: "Power to sign other documents"}
       - "Other (fill in below):": other
     none of the above: false
     show if: delegate_specific_authority_yes
@@ -312,8 +313,8 @@ fields:
     field: users1_end_date
     datatype: date
     help: Must be within 6 months.
-    min: "${ today().year }"
-    max: "${ today().plus(months=6) }"
+    min: "${ (today()).format('yyyy-MM-dd', language='en') }"
+    max: "${ (today().plus(months=6)).format('yyyy-MM-dd', language='en') }"
 ---
 id: Contact Information
 question: |2
@@ -336,7 +337,7 @@ fields:
   - label: Notary commission expiration date
     field: notary_commission_expiration_date
     datatype: date
-    min: "${ today() }"
+    min: "${ (today()).format('yyyy-MM-dd', language='en') }"
     required: False
 ---
 id: Notary County
@@ -346,59 +347,59 @@ fields:
     field: notary_county
     datatype: dropdown
     choices:
-      - "Adams County"
-      - "Barnes County"
-      - "Benson County"
-      - "Billings County"
-      - "Bottineau County"
-      - "Bowman County"
-      - "Burke County"
-      - "Burleigh County"
-      - "Cass County"
-      - "Cavalier County"
-      - "Dickey County"
-      - "Divide County"
-      - "Dunn County"
-      - "Eddy County"
-      - "Emmons County"
-      - "Foster County"
-      - "Golden Valley County"
-      - "Grand Forks County"
-      - "Grant County"
-      - "Griggs County"
-      - "Hettinger County"
-      - "Kidder County"
-      - "LaMoure County"
-      - "Logan County"
-      - "McHenry County"
-      - "McIntosh County"
-      - "McKenzie County"
-      - "McLean County"
-      - "Mercer County"
-      - "Morton County"
-      - "Mountrail County"
-      - "Nelson County"
-      - "Oliver County"
-      - "Pembina County"
-      - "Pierce County"
-      - "Ramsey County"
-      - "Ransom County"
-      - "Renville County"
-      - "Richland County"
-      - "Rolette County"
-      - "Sargent County"
-      - "Sheridan County"
-      - "Sioux County"
-      - "Slope County"
-      - "Stark County"
-      - "Steele County"
-      - "Stutsman County"
-      - "Towner County"
-      - "Traill County"
-      - "Walsh County"
-      - "Ward County"
-      - "Wells County"
-      - "Williams County"
+      - {label: "Adams County", value: "Adams County"}
+      - {label: "Barnes County", value: "Barnes County"}
+      - {label: "Benson County", value: "Benson County"}
+      - {label: "Billings County", value: "Billings County"}
+      - {label: "Bottineau County", value: "Bottineau County"}
+      - {label: "Bowman County", value: "Bowman County"}
+      - {label: "Burke County", value: "Burke County"}
+      - {label: "Burleigh County", value: "Burleigh County"}
+      - {label: "Cass County", value: "Cass County"}
+      - {label: "Cavalier County", value: "Cavalier County"}
+      - {label: "Dickey County", value: "Dickey County"}
+      - {label: "Divide County", value: "Divide County"}
+      - {label: "Dunn County", value: "Dunn County"}
+      - {label: "Eddy County", value: "Eddy County"}
+      - {label: "Emmons County", value: "Emmons County"}
+      - {label: "Foster County", value: "Foster County"}
+      - {label: "Golden Valley County", value: "Golden Valley County"}
+      - {label: "Grand Forks County", value: "Grand Forks County"}
+      - {label: "Grant County", value: "Grant County"}
+      - {label: "Griggs County", value: "Griggs County"}
+      - {label: "Hettinger County", value: "Hettinger County"}
+      - {label: "Kidder County", value: "Kidder County"}
+      - {label: "LaMoure County", value: "LaMoure County"}
+      - {label: "Logan County", value: "Logan County"}
+      - {label: "McHenry County", value: "McHenry County"}
+      - {label: "McIntosh County", value: "McIntosh County"}
+      - {label: "McKenzie County", value: "McKenzie County"}
+      - {label: "McLean County", value: "McLean County"}
+      - {label: "Mercer County", value: "Mercer County"}
+      - {label: "Morton County", value: "Morton County"}
+      - {label: "Mountrail County", value: "Mountrail County"}
+      - {label: "Nelson County", value: "Nelson County"}
+      - {label: "Oliver County", value: "Oliver County"}
+      - {label: "Pembina County", value: "Pembina County"}
+      - {label: "Pierce County", value: "Pierce County"}
+      - {label: "Ramsey County", value: "Ramsey County"}
+      - {label: "Ransom County", value: "Ransom County"}
+      - {label: "Renville County", value: "Renville County"}
+      - {label: "Richland County", value: "Richland County"}
+      - {label: "Rolette County", value: "Rolette County"}
+      - {label: "Sargent County", value: "Sargent County"}
+      - {label: "Sheridan County", value: "Sheridan County"}
+      - {label: "Sioux County", value: "Sioux County"}
+      - {label: "Slope County", value: "Slope County"}
+      - {label: "Stark County", value: "Stark County"}
+      - {label: "Steele County", value: "Steele County"}
+      - {label: "Stutsman County", value: "Stutsman County"}
+      - {label: "Towner County", value: "Towner County"}
+      - {label: "Traill County", value: "Traill County"}
+      - {label: "Walsh County", value: "Walsh County"}
+      - {label: "Ward County", value: "Ward County"}
+      - {label: "Wells County", value: "Wells County"}
+      - {label: "Williams County", value: "Williams County"}
 ---
 comment: |
   The questions below are copies of the questions in AssemblyLine's
@@ -447,7 +448,7 @@ fields:
     datatype: BirthDate
 validation code: |
   if date_difference(starting=children[i].birthdate, ending=today()).years >= 18:
-    validation_error("Check the birthdate. Your child must be under 18 if you want to add them to this form.", field="children[i].birthdate")
+    validation_error(word("Check the birthdate. Your child must be under 18 if you want to add them to this form."), field="children[i].birthdate")
 ---
 id: another child
 question: |
@@ -634,18 +635,20 @@ table: users.table
 rows: users
 columns:
   - Name: |
-      row_item.name_full() if defined("row_item.name.first") else ""
+      row_item.name_full() if row_item.name.attribute_defined('first') else ""
   - Address: |
-      row_item.address.block() if defined("row_item.address.address") else ""
+      row_item.address.block() if row_item.address.attribute_defined('address') else ""
   - Signature: |
-      row_item.signature if defined("row_item.signature") else ""
+      row_item.signature if row_item.attribute_defined('signature') else ""
   - Phone number: |
-      row_item.phone_number if defined("row_item.phone_number") else ""
+      row_item.phone_number if row_item.attribute_defined('phone_number') else ""
 edit:
   - name.first
   - address.address
   - phone_number
 confirm: True
+edit header: |
+  ${ word("Actions") }
 ---
 id: edit children
 continue button field: children.revisit
@@ -660,13 +663,15 @@ table: children.table
 rows: children
 columns:
   - Name: |
-      row_item.name_full() if defined("row_item.name.first") else ""
+      row_item.name_full() if row_item.name.attribute_defined('first') else ""
   - Birthdate: |
-      row_item.birthdate if defined("row_item.birthdate") else ""
+      row_item.birthdate if row_item.attribute_defined('birthdate') else ""
 edit:
   - name.first
   - birthdate
 confirm: True
+edit header: |
+  ${ word("Actions") }
 ---
 id: edit attorney in fact
 continue button field: attorney_in_fact.revisit
@@ -683,13 +688,15 @@ table: attorney_in_fact.table
 rows: attorney_in_fact
 columns:
   - Name: |
-      row_item.name_full() if defined("row_item.name.first") else ""
+      row_item.name_full() if row_item.name.attribute_defined('first') else ""
   - Address: |
-      row_item.address.block() if defined("row_item.address.address") else ""
+      row_item.address.block() if row_item.address.attribute_defined('address') else ""
 edit:
   - name.first
   - address.address
 confirm: True
+edit header: |
+  ${ word("Actions") }
 ---
 id: edit notary
 continue button field: notary.revisit
@@ -714,9 +721,11 @@ table: notary.table
 rows: notary
 columns:
   - Signature: |
-      row_item.signature if defined("row_item.signature") else ""
+      row_item.signature if row_item.attribute_defined('signature') else ""
 edit: True
 confirm: True
+edit header: |
+  ${ word("Actions") }
 ---
 id: download nd_power_of_attorney_minor
 event: nd_power_of_attorney_minor_short_form_v2_download
@@ -797,11 +806,11 @@ attachment:
       - "users1_is_parent": ${ users1_is_parent }
       - "users1_is_legal_guardian": ${ users1_is_legal_guardian }
       - "children1_name": ${ children[0] }
-      - "children1_birthdate": ${ format_date(children[0].birthdate, format='MMM d, yyyy') }
+      - "children1_birthdate": ${ format_date(children[0].birthdate, format='MMM d, yyyy', language='en') }
       - "children2_name": ${ children[1] }
-      - "children2_birthdate": ${ format_date(children[1].birthdate, format='MMM d, yyyy') }
+      - "children2_birthdate": ${ format_date(children[1].birthdate, format='MMM d, yyyy', language='en') }
       - "children3_name": ${ "See addendum" if len(children) > 3 else children[2] }
-      - "children3_birthdate": ${ "" if len(children) > 3 else format_date(children[2].birthdate, format='MMM d, yyyy') }
+      - "children3_birthdate": ${ "" if len(children) > 3 else format_date(children[2].birthdate, format='MMM d, yyyy', language='en') }
       - "users1_address_line_one": ${ users[0].address.line_one() }
       - "users1_address_line_two": ${ users[0].address.line_two() }
       - "attorney_in_fact_name": ${ attorney_in_fact[0] }
@@ -811,18 +820,27 @@ attachment:
       - "delegate_specific_authority_yes": ${ delegate_specific_authority_yes }
       #- "specific_authority": ${ ", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else [])) }
       - "specific_authority": ${ (", ".join([p for p in specific_authority.true_values() if p != 'other'] + ([specific_authority_other] if specific_authority['other'] else []))) if delegate_specific_authority_yes else "" }
-      - "users1_end_date": ${ users1_end_date.format() }
-      - "signature_date": ${ signature_date.format() }
+      - "users1_end_date": ${ users1_end_date.format(language='en') }
+      - "signature_date": ${ signature_date.format(language='en') }
       #- "signature_date": ${ signature_date.format() if with_notary_now else []}
       - "users1_signature": ${ users[0].signature_if_final(i) }
       - "users1_address_on_one_line": ${ users[0].address.on_one_line() }
       - "users1_phone_number": ${ phone_number_formatted(users[0].phone_number) }
       - "users1_email_address": ${ users1_email_address }
       - "users1_name_full__2": ${ users[0].name.full() + (", " + notary_county + ", North Dakota" if defined('with_notary_now') and with_notary_now and defined('notary_county') else "") }
-      - "notary_date": ${ notary_date.format() }
+      - "notary_date": ${ notary_date.format(language='en') }
       - "notary_signature": ${ notary[0].signature_if_final(i) }
-      - "notary_commission_expiration_date": ${ notary_commission_expiration_date.format() }
+      - "notary_commission_expiration_date": ${ notary_commission_expiration_date.format(language='en') }
 ---
 template: nd_power_of_attorney_minor_short_form_v2_attachment_title
 content: |
   Nd power of attorney minor short form v2
+
+---
+language: es
+sections:
+- people: Comience aquí
+- about_you: Su contacto y familia
+- case_details: Elija a una persona cuidadora
+- review_nd_power_of_attorney_minor_v2: Revise sus respuestas
+- sign_and_submit: Firmar y presentar
